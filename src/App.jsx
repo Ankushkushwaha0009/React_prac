@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { useState } from "react";
 
@@ -14,28 +13,67 @@ function App() {
 
   const handleJobChange = (e) => {
     const { name, value } = e.target;
-
-    setJob((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setJob((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    setApplications((prev) => [
-      ...prev,
-      {
-        ...job,
-        id: Date.now(),
-      },
-    ]);
-
+    setApplications((prev) => {
+      return [
+        ...prev,
+        {
+          ...job,
+          id: Date.now(),
+        },
+      ];
+    });
     setJob({
       company: "",
       role: "",
       status: "",
+    });
+  };
+
+  const handleDelete = (id) => {
+    // setApplications(
+    //   applications.filter((app) => {
+    //     return app.id != id;
+    //   }),
+    // );
+    setApplications((prev) => {
+      return prev.filter((app) => {
+        return app.id != id;
+      });
+    });
+  };
+
+  const handleEdit = (id) => {
+    // const afterUpdate = applications.map((app) => {
+    //   if (app.id == id) {
+    //     return {
+    //       ...app,
+    //       role: "Senior frontend developer",
+    //     };
+    //   }
+    //   return app;
+    // });
+    // setApplications(afterUpdate);
+
+    setApplications((prev) => {
+      return prev.map((app) => {
+        if (app.id == id) {
+          return {
+            ...app,
+            role: "senior frontend developer",
+          };
+        }
+        return app;
+      });
     });
   };
 
@@ -102,6 +140,23 @@ function App() {
             <h2>0</h2>
           </div>
         </div>
+
+        <section className="applications">
+          <h2> My Applications </h2>
+          {applications.length === 0 ? (
+            <p> No Applications added yet</p>
+          ) : (
+            applications.map((app) => (
+              <div className="application-card" key={app.id}>
+                <h3>{app.company}</h3>
+                <p>{app.role}</p>
+                <span>{app.status}</span>
+                <button onClick={() => handleDelete(app.id)}>Delete</button>
+                <button onClick={() => handleEdit(app.id)}>Edit</button>
+              </div>
+            ))
+          )}
+        </section>
       </main>
     </div>
   );
