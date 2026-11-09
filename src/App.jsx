@@ -3,6 +3,14 @@ import { useState } from "react";
 
 function App() {
   const [applications, setApplications] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+
+  const [editForm, setEditForm] = useState({
+    company: "",
+    role: "",
+    status: "",
+  });
+
   const [job, setJob] = useState({
     company: "",
     role: "",
@@ -52,30 +60,40 @@ function App() {
     });
   };
 
-  const handleEdit = (id) => {
-    // const afterUpdate = applications.map((app) => {
-    //   if (app.id == id) {
-    //     return {
-    //       ...app,
-    //       role: "Senior frontend developer",
-    //     };
-    //   }
-    //   return app;
-    // });
-    // setApplications(afterUpdate);
-
-    setApplications((prev) => {
-      return prev.map((app) => {
-        if (app.id == id) {
-          return {
-            ...app,
-            role: "senior frontend developer",
-          };
-        }
-        return app;
-      });
+  const handleEditClick = (app) => {
+    console.log(app);
+    setEditingId(app.id);
+    setEditForm({
+      company: app.company,
+      role: app.role,
+      status: app.status,
     });
   };
+
+  // const handleEdit = (id) => {
+  //   // const afterUpdate = applications.map((app) => {
+  //   //   if (app.id == id) {
+  //   //     return {
+  //   //       ...app,
+  //   //       role: "Senior frontend developer",
+  //   //     };
+  //   //   }
+  //   //   return app;
+  //   // });
+  //   // setApplications(afterUpdate);
+
+  //   setApplications((prev) => {
+  //     return prev.map((app) => {
+  //       if (app.id == id) {
+  //         return {
+  //           ...app,
+  //           role: "senior frontend developer",
+  //         };
+  //       }
+  //       return app;
+  //     });
+  //   });
+  // };
 
   return (
     <div className="app">
@@ -148,11 +166,20 @@ function App() {
           ) : (
             applications.map((app) => (
               <div className="application-card" key={app.id}>
-                <h3>{app.company}</h3>
-                <p>{app.role}</p>
-                <span>{app.status}</span>
-                <button onClick={() => handleDelete(app.id)}>Delete</button>
-                <button onClick={() => handleEdit(app.id)}>Edit</button>
+                {editingId == app.id ? (
+                  <div>
+                    <h3> Editing {app.company}</h3>
+                    <input type="text" value={editForm.company} readOnly />
+                  </div>
+                ) : (
+                  <div>
+                    <h3>{app.company}</h3>
+                    <p>{app.role}</p>
+                    <span>{app.status}</span>
+                    <button onClick={() => handleDelete(app.id)}>Delete</button>
+                    <button onClick={() => handleEditClick(app)}>Edit</button>
+                  </div>
+                )}
               </div>
             ))
           )}
