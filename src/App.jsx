@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [applications, setApplications] = useState([]);
@@ -18,6 +18,10 @@ function App() {
   });
 
   const totalApplications = applications.length;
+
+  useEffect(() => {
+    console.log(applications);
+  }, [applications]);
 
   const handleJobChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +74,16 @@ function App() {
     });
   };
 
+  const handleEditChage = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
   // const handleEdit = (id) => {
   //   // const afterUpdate = applications.map((app) => {
   //   //   if (app.id == id) {
@@ -94,6 +108,26 @@ function App() {
   //     });
   //   });
   // };
+
+  /*
+   
+
+  JavaScript processes this from left to right:
+1. Copies all properties from app.
+2. Copies all properties from editForm.
+3. If a property exists in both objects, the later value overwrites the earlier value.
+
+
+  */
+
+  const handleSave = (id) => {
+    setApplications((prev) => {
+      return prev.map((app) => {
+        return app.id === id ? { ...app, ...editForm } : app;
+      });
+    });
+    setEditingId(null);
+  };
 
   return (
     <div className="app">
@@ -168,8 +202,33 @@ function App() {
               <div className="application-card" key={app.id}>
                 {editingId == app.id ? (
                   <div>
-                    <h3> Editing {app.company}</h3>
-                    <input type="text" value={editForm.company} readOnly />
+                    <h3> Editing {editForm.company}</h3>
+                    <h3> Editing {editForm.role}</h3>
+                    <h3> Editing {editForm.status}</h3>
+                    <input
+                      type="text"
+                      name="company"
+                      value={editForm.company}
+                      onChange={handleEditChage}
+                    />
+                    <input
+                      type="text"
+                      name="role"
+                      value={editForm.role}
+                      onChange={handleEditChage}
+                    />
+                    <input
+                      type="text"
+                      name="status"
+                      value={editForm.status}
+                      onChange={handleEditChage}
+                    />
+                    <button onClick={() => handleSave(app.id)}>
+                      Save Changes
+                    </button>
+                    <button onClick={() => setEditingId(null)}>
+                      Cancel
+                    </button>
                   </div>
                 ) : (
                   <div>
