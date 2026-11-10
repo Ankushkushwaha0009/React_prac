@@ -129,6 +129,17 @@ function App() {
     setEditingId(null);
   };
 
+  const totalInterviews = applications.filter((app) => {
+    return app.status === "Interview";
+  }).length;
+
+  const totalOffer = applications.filter((app) => {
+    return app.status === "Offer";
+  }).length;
+
+  console.log(totalOffer);
+  console.log(totalInterviews);
+
   return (
     <div className="app">
       <header className="header">
@@ -184,12 +195,12 @@ function App() {
 
           <div className="stat-card">
             <h3>Interviews</h3>
-            <h2>0</h2>
+            <h2>{totalInterviews}</h2>
           </div>
 
           <div className="stat-card">
             <h3>Offers</h3>
-            <h2>0</h2>
+            <h2>{totalOffer}</h2>
           </div>
         </div>
 
@@ -226,9 +237,7 @@ function App() {
                     <button onClick={() => handleSave(app.id)}>
                       Save Changes
                     </button>
-                    <button onClick={() => setEditingId(null)}>
-                      Cancel
-                    </button>
+                    <button onClick={() => setEditingId(null)}>Cancel</button>
                   </div>
                 ) : (
                   <div>
